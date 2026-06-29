@@ -14,59 +14,128 @@ export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (!imageRef.current || !sectionRef.current) return;
+  if (!imageRef.current || !sectionRef.current) return;
 
-    const ctx = gsap.context(() => {
-      // Floating Animation
-      gsap.to(imageRef.current, {
-        y: -18,
-        duration: 2.8,
+  const glow = document.getElementById("hero-glow");
+  const shadow = document.getElementById("hero-shadow");
+
+  const ctx = gsap.context(() => {
+    // Floating
+    gsap.to(imageRef.current, {
+      y: -18,
+      duration: 2.5,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
+
+    // Shadow Floating
+    if (shadow) {
+      gsap.to(shadow, {
+        scale: 0.82,
+        opacity: 0.12,
+        duration: 2.5,
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut",
       });
+    }
 
-      // Cinematic Scroll Effect
-      gsap.to(imageRef.current, {
-        rotate: 12,
-        rotateY: 25,
-        rotateX: -8,
+    // Glow Floating
+    if (glow) {
+      gsap.to(glow, {
+        scale: 1.15,
+        duration: 2.5,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+    }
+
+    // Scroll Animation
+    gsap.to(imageRef.current, {
+      rotate: 15,
+      rotateY: 35,
+      rotateX: -10,
+      x: 60,
+      y: -80,
+      scale: 1.15,
+      ease: "none",
+
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 2,
+      },
+    });
+
+    // Shadow Scroll
+    if (shadow) {
+      gsap.to(shadow, {
         x: 40,
-        y: -70,
-        scale: 1.12,
-        filter: "drop-shadow(0px 45px 45px rgba(0,0,0,.18))",
-        ease: "none",
+        scale: 1.25,
 
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top bottom",
           end: "bottom top",
-          scrub: 1.5,
+          scrub: 2,
         },
       });
+    }
 
-      // Mouse Parallax
-      const move = (e: MouseEvent) => {
-        const x = (e.clientX / window.innerWidth - 0.5) * 16;
-        const y = (e.clientY / window.innerHeight - 0.5) * 16;
+    // Glow Scroll
+    if (glow) {
+      gsap.to(glow, {
+        scale: 1.45,
 
-        gsap.to(imageRef.current, {
-          rotateY: x,
-          rotateX: -y,
-          duration: 0.8,
-          ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 2,
+        },
+      });
+    }
+
+    // Mouse Move
+    const move = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 25;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+      gsap.to(imageRef.current, {
+        rotateY: x,
+        rotateX: -y,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+
+      if (shadow) {
+        gsap.to(shadow, {
+          x: x * 0.8,
+          duration: 1,
         });
-      };
+      }
 
-      window.addEventListener("mousemove", move);
+      if (glow) {
+        gsap.to(glow, {
+          x: x * 0.5,
+          y: y * 0.5,
+          duration: 1,
+        });
+      }
+    };
 
-      return () => {
-        window.removeEventListener("mousemove", move);
-      };
-    }, sectionRef);
+    window.addEventListener("mousemove", move);
 
-    return () => ctx.revert();
-  }, []);
+    return () => {
+      window.removeEventListener("mousemove", move);
+    };
+  }, sectionRef);
+
+  return () => ctx.revert();
+}, []);
 
   return (
     <section
@@ -78,27 +147,43 @@ export default function Hero() {
           {/* LEFT */}
 
           <motion.div
-            ref={imageRef}
             initial={{ opacity: 0, x: -80 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            style={{
-              transformStyle: "preserve-3d",
-              perspective: "1200px",
-              willChange: "transform",
-            }}
-            className="flex justify-center"
+            className="relative flex items-center justify-center h-[700px]"
           >
-            <Image
-              src="/hero.png"
-              alt="Luxury skincare"
-              width={520}
-              height={720}
-              priority
-              className="select-none object-contain"
-              draggable={false}
+            {/* Glow */}
+            <div
+              id="hero-glow"
+              className="absolute h-[420px] w-[420px] rounded-full bg-white opacity-70 blur-[120px]"
             />
+
+            {/* Shadow */}
+            <div
+              id="hero-shadow"
+              className="absolute bottom-12 h-10 w-56 rounded-full bg-black/20 blur-2xl"
+            />
+
+            {/* Bottle */}
+            <div
+              ref={imageRef}
+              style={{
+                transformStyle: "preserve-3d",
+                willChange: "transform",
+              }}
+              className="relative z-10"
+            >
+              <Image
+                src="/hero.png"
+                alt="Luxury skincare"
+                width={430}
+                height={700}
+                priority
+                draggable={false}
+                className="object-contain select-none pointer-events-none"
+              />
+            </div>
           </motion.div>
 
           {/* RIGHT */}
@@ -123,9 +208,9 @@ export default function Hero() {
             </p>
 
             <p className="mt-10 max-w-md text-neutral-600 leading-8">
-              A transformative formula meticulously crafted to restore
-              cellular vitality. ELIXIR N°1 leverages rare botanical
-              distillates to deliver unparalleled luminosity.
+              A transformative formula meticulously crafted to restore cellular
+              vitality. ELIXIR N°1 leverages rare botanical distillates to
+              deliver unparalleled luminosity.
             </p>
 
             <button
