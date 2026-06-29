@@ -1,7 +1,9 @@
-import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
 import Ritual from "@/components/Ritual";
 import Ingredients from "@/components/Ingredients";
+import CTA from "@/components/CTA";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -10,6 +12,8 @@ export default function Home() {
       <Hero />
       <Ritual />
       <Ingredients />
+      <CTA />
+      <Footer />
     </main>
   );
 }
