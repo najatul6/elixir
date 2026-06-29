@@ -3,20 +3,31 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Container from "./ui/Container";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 
 export default function Hero() {
+  const imageRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    gsap.to(imageRef.current, {
+      y: -15,
+      repeat: -1,
+      yoyo: true,
+      duration: 3,
+      ease: "power1.inOut",
+    });
+  }, []);
   return (
     <section className="py-16 lg:py-28">
       <Container>
-
         <div className="grid items-center gap-16 lg:grid-cols-2">
-
           {/* LEFT */}
 
           <motion.div
+            ref={imageRef}
             initial={{ opacity: 0, x: -80 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: .8 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
             <Image
@@ -34,11 +45,10 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, x: 80 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: .8 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
             className="text-center lg:text-left"
           >
-
             <p className="mb-5 text-xs uppercase tracking-[6px] text-neutral-500">
               N°1 THE CONCENTRATE
             </p>
@@ -52,9 +62,9 @@ export default function Hero() {
             </p>
 
             <p className="mt-10 max-w-md text-neutral-600 leading-8">
-              A transformative formula meticulously crafted to restore
-              cellular vitality. ELIXIR N°1 leverages rare botanical
-              distillates to deliver unparalleled luminosity.
+              A transformative formula meticulously crafted to restore cellular
+              vitality. ELIXIR N°1 leverages rare botanical distillates to
+              deliver unparalleled luminosity.
             </p>
 
             <button
@@ -72,11 +82,8 @@ export default function Hero() {
             >
               Explore
             </button>
-
           </motion.div>
-
         </div>
-
       </Container>
     </section>
   );
