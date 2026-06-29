@@ -28,10 +28,7 @@ export default function CTA() {
             elegance.
           </p>
 
-          <button
-            className="mt-12 border border-black px-10 py-4 uppercase tracking-[4px]
-            transition-all duration-300 hover:bg-black hover:text-white"
-          >
+          <button className="shine-btn border border-black px-10 py-4 uppercase tracking-[4px] hover:bg-black hover:text-white transition">
             Shop Collection
           </button>
         </motion.div>
