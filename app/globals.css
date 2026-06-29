@@ -27,3 +27,24 @@ h1,h2,h3,h4,h5{
     margin:auto;
     padding-inline:24px;
 }
+
+.shine-btn{
+    position:relative;
+    overflow:hidden;
+}
+
+.shine-btn::before{
+    content:"";
+    position:absolute;
+    left:-100%;
+    top:0;
+    width:60%;
+    height:100%;
+    transform:skew(-25deg);
+    background:rgba(255,255,255,.4);
+    transition:.8s;
+}
+
+.shine-btn:hover::before{
+    left:160%;
+}
